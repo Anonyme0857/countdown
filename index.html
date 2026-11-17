@@ -3,114 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown</title>
+  <title>Compte à rebours AGF</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap');
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      /* Cadre extérieur vert forêt */
+      background-color: #1b4332;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 14px;
+    }
 
-    html, body {
+    .card {
+      /* Fond intérieur vert sauge pastel */
+      background-color: #d8f3dc;
       width: 100%;
       height: 100%;
-      background: transparent;
-      font-family: 'Quicksand', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .tulip {
-      position: fixed;
-      opacity: 0.15;
-      pointer-events: none;
-      animation: float 7s ease-in-out infinite;
-    }
-    .tulip:nth-child(1) { top: 8%;  left: 8%;  font-size: 1.2rem; animation-delay: 0s; }
-    .tulip:nth-child(2) { top: 8%;  right: 8%; font-size: 1rem;   animation-delay: 1s; }
-    .tulip:nth-child(3) { bottom: 8%; left: 8%;  font-size: 1rem; animation-delay: 2s; }
-    .tulip:nth-child(4) { bottom: 8%; right: 8%; font-size: 1.2rem; animation-delay: 1.5s; }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50%       { transform: translateY(-8px) rotate(5deg); }
-    }
-
-    .container {
+      border-radius: 16px;
+      position: relative;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      gap: 0.8rem;
-      padding: 0.5rem;
-      width: 100%;
-    }
-
-    .title {
-      font-size: 0.6rem;
-      font-weight: 400;
-      color: #7abf9e;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-
-    .days-number {
-      font-size: 3.5rem;
-      font-weight: 600;
-      color: #a2d5b4;
-      line-height: 1;
-    }
-
-    .days-label {
-      font-size: 0.6rem;
-      color: #7abf9e;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-top: 0.3rem;
-    }
-
-    .done {
-      font-size: 0.9rem;
-      color: #a2d5b4;
+      align-items: center;
       text-align: center;
+      padding: 20px;
+    }
+
+    /* Émojis en filigrane dans les 4 coins */
+    .corner-emoji {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0.35;
+      user-select: none;
+    }
+    .top-left { top: 20px; left: 20px; }
+    .top-right { top: 20px; right: 20px; }
+    .bottom-left { bottom: 20px; left: 20px; }
+    .bottom-right { bottom: 20px; right: 20px; }
+
+    .subtitle {
+      font-size: 15px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #40916c;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .countdown {
+      font-size: 23px;
+      font-weight: 700;
+      color: #1b4332;
     }
   </style>
 </head>
 <body>
-  <div class="tulip">🌷</div>
-  <div class="tulip">🌷</div>
-  <div class="tulip">🌷</div>
-  <div class="tulip">🌷</div>
 
-  <div class="container">
-    <div class="title">🌷 Art to Play 🌷</div>
-    <div id="countdown">
-      <div style="text-align:center">
-        <div class="days-number" id="days">--</div>
-        <div class="days-label">jours</div>
-      </div>
-    </div>
+  <div class="card">
+    <span class="corner-emoji top-left">🌿</span>
+    <span class="corner-emoji top-right">🌻</span>
+    <span class="corner-emoji bottom-left">🌻</span>
+    <span class="corner-emoji bottom-right">🌿</span>
+
+    <div class="subtitle">🌿 AGF 🌻</div>
+
+    <div class="countdown" id="timer">Chargement...</div>
   </div>
 
   <script>
-    const target = new Date('2026-11-13T00:00:00');
+    // Date cible : 2 avril 2027 à minuit
+    const targetDate = new Date("2027-04-02T00:00:00").getTime();
 
-    function update() {
-      const now  = new Date();
-      const diff = target - now;
+    // Message affiché une fois arrivé au 2 avril
+    const endMessage = "🌻 C’est le grand jour ! 🌿";
 
-      if (diff <= 0) {
-        document.getElementById('countdown').innerHTML =
-          '<p class="done">🌷 C\'est le grand jour ! 🌷</p>';
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0) {
+        document.getElementById("timer").innerHTML = endMessage;
         return;
       }
 
-      const days = Math.floor(diff / 86400000);
-      document.getElementById('days').textContent = days;
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("timer").innerHTML = 
+        `🌿 ${days}j ${hours}h ${minutes}m ${seconds}s 🌻`;
     }
 
-    update();
-    setInterval(update, 60000);
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   </script>
+
 </body>
 </html>
