@@ -59,7 +59,7 @@
     }
 
     .countdown {
-      font-size: 23px;
+      font-size: 25px;
       font-weight: 700;
       color: #1b4332;
     }
@@ -94,15 +94,15 @@
         return;
       }
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-     
+      // Math.ceil arrondit au jour supérieur pour compter le jour en cours
+      const days = Math.ceil(distance / (1000 * 60 * 60 * 24));
+      const label = days > 1 ? "jours" : "jour";
 
-      document.getElementById("timer").innerHTML = 
-        `🌿 ${days}j ${hours}h ${minutes}m ${seconds}s 🌻`;
+      document.getElementById("timer").innerHTML = `🌿 ${days} ${label} 🌻`;
     }
 
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    setInterval(updateCountdown, 60000);
   </script>
 
 </body>
